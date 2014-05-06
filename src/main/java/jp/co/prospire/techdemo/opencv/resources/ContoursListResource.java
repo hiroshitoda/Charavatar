@@ -80,7 +80,7 @@ public class ContoursListResource
 
         this.tempDirectoryPath = this.defaultFileSystem.getPath(
                 ".",
-                "OpenCVSample"
+                "Charavatar"
             );
         
         java.nio.file.Path haarcascadeFilePath = this.defaultFileSystem.getPath(
