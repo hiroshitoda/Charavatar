@@ -1,0 +1,16 @@
+# logging setting section.
+logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+template: Hello, %s!
+
+# Contour section.
+canvasWidth: 480
+canvasHeight: 480
+smoothness: 6
+
+# Twitter OAuth section.
+consumerKey: 
+consumerSecret: 
+callbackUrl: http://charavatar.me/tweets/get
