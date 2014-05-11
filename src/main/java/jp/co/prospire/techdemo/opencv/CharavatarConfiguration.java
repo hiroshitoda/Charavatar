@@ -1,6 +1,11 @@
 package jp.co.prospire.techdemo.opencv;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -33,6 +38,15 @@ public class CharavatarConfiguration extends Configuration {
     @NotEmpty
     @JsonProperty
     private String callbackUrl;
+
+    @NotEmpty
+    @JsonProperty
+    private String temporaryDirectory;
+
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private DataSourceFactory database = new DataSourceFactory();
 
     @JsonProperty
     public String getTemplate()
@@ -74,5 +88,14 @@ public class CharavatarConfiguration extends Configuration {
     @JsonProperty
     public String getCallbackUrl() {
         return this.callbackUrl;
+    }
+
+    @JsonProperty
+    public String getTemporaryDirectory() {
+        return this.temporaryDirectory;
+    }
+
+    public DataSourceFactory getDataSourceFactory() {
+        return database;
     }
 }

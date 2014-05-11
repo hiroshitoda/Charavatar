@@ -7,7 +7,6 @@ import jp.co.prospire.techdemo.opencv.service.RedirectToAuthUrlView;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.google.common.base.Charsets;
 import com.googlecode.javacpp.Loader;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -53,17 +52,20 @@ public class ContoursListResource
     private final String haarcascadeFileName = "haarcascade_frontalface_default.xml";
     private String haarcascadeFileAbsolutePath;
 
+    private final String tempDirectoryPathString;
     private java.nio.file.Path tempDirectoryPath;
     
     private final ArrayList<Contours> emptyList = new ArrayList<Contours>();
 
-    public ContoursListResource(int canvasWidth, int canvasHeight, int smoothness)
+    public ContoursListResource(int canvasWidth, int canvasHeight, int smoothness,
+            String tempDirectoryPathString)
     {
         this.counter = new AtomicLong();
         
-        this.canvasWidth = canvasWidth; 
-        this.canvasHeight = canvasHeight; 
-        this.smoothness = smoothness; 
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+        this.smoothness = smoothness;
+        this.tempDirectoryPathString = tempDirectoryPathString;
         logger.info(
                 String.format(
                         "canvas size: %d x %d",
@@ -79,7 +81,7 @@ public class ContoursListResource
                 .getResourceAsStream(this.haarcascadeFileName);
 
         this.tempDirectoryPath = this.defaultFileSystem.getPath(
-                ".",
+                this.tempDirectoryPathString,
                 "Charavatar"
             );
         
@@ -168,49 +170,59 @@ public class ContoursListResource
 
         // read EXIF for considering rotation.
         File jpegFile = new File(temporaryFilePathString);
-        Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
-        ExifIFD0Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
         int orientation = 1;
-        orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
-        log(LogLevel.DEBUG, "camera orientation value: %d", orientation);
+        try
+        {
+            Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+            ExifIFD0Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
+            orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+            log(LogLevel.DEBUG, "camera orientation value: %d", orientation);
+        }
+        catch (Exception e)
+        {
+            log(LogLevel.WARN, "can't find orientation value from EXIF %s",
+                    e.getMessage());
+            orientation = 1;
+        }
 
         int rawWidth = uploadImage.width();
         int rawHeight = uploadImage.height();
 
-        IplImage returnImage = IplImage.create(
-                rawWidth,
-                rawHeight,
-                IPL_DEPTH_8U,
-                CV_LOAD_IMAGE_ANYCOLOR
-            );;
+        IplImage returnImage = null;
+        int returnWidth = uploadImage.width();
+        int returnHeight = uploadImage.height();
 
         double rotateDegree = 0.0;
-        CvPoint2D32f center = new CvPoint2D32f(uploadImage.width() / 2, uploadImage.height() / 2);
-        CvMat rotationMat = cvCreateMat(2, 3, CV_32F);
         switch (orientation)
         {
             case 3:
+                returnWidth = rawWidth;
+                returnHeight = rawHeight;
                 rotateDegree = 180.0;
                 break;
             case 6:
+                returnWidth = rawHeight;
+                returnHeight = rawWidth;
                 rotateDegree = 90.0;
-                returnImage = IplImage.create(
-                        rawHeight,
-                        rawWidth,
-                        uploadImage.depth(),
-                        uploadImage.nChannels()
-                    );
                 break;
             case 8:
+                returnWidth = rawHeight;
+                returnHeight = rawWidth;
                 rotateDegree = 270.0;
-                returnImage = IplImage.create(
-                        rawHeight,
-                        rawWidth,
-                        uploadImage.depth(),
-                        uploadImage.nChannels()
-                    );
                 break;
+            case 1:
+            default:
+                return uploadImage;
         }
+        returnImage = IplImage.create(
+                returnWidth,
+                returnHeight,
+                uploadImage.depth(),
+                uploadImage.nChannels()
+            );
+
+        CvPoint2D32f center = new CvPoint2D32f(rawWidth / 2, rawHeight / 2);
+        CvMat rotationMat = cvCreateMat(2, 3, CV_32F);
         CvMat affineMatrix = cv2DRotationMatrix(center, -rotateDegree, 1.0, rotationMat);
         cvWarpAffine(uploadImage, returnImage, affineMatrix);
         log(LogLevel.DEBUG, "camera orientation degree: %f", rotateDegree);
@@ -450,6 +462,10 @@ public class ContoursListResource
                 // get contour from opencv contours.
                 int totalPointsCount = contours.total();
                 Contour contourElement = new Contour(contoursIndex);
+
+                // get arc length of contour.
+                contourElement.setArcLength(cvArcLength(contours, CV_WHOLE_SEQ, 1));
+
                 for (int pointsIndex = 0; pointsIndex < totalPointsCount; pointsIndex++)
                 {
                     // get point from contour.

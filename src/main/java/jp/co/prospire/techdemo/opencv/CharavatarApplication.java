@@ -26,7 +26,7 @@ public class CharavatarApplication extends Application<CharavatarConfiguration>
     @Override
     public void initialize(Bootstrap<CharavatarConfiguration> bootstrap)
     {
-        bootstrap.addBundle(new AssetsBundle());
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
         bootstrap.addBundle(new ViewBundle());
     }
 
@@ -34,10 +34,13 @@ public class CharavatarApplication extends Application<CharavatarConfiguration>
     public void run(CharavatarConfiguration configuration,
                     Environment environment)
     {
+        environment.jersey().setUrlPattern("/service/*");
+
         final ContoursListResource contoursListResource = new ContoursListResource(
                 Integer.parseInt(configuration.getCanvasWidth()),
                 Integer.parseInt(configuration.getCanvasHeight()),
-                Integer.parseInt(configuration.getSmoothness())
+                Integer.parseInt(configuration.getSmoothness()),
+                configuration.getTemporaryDirectory()
             );
         
         final TweetResource tweetResource = new TweetResource(
