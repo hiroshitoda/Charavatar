@@ -4,21 +4,31 @@
 <head>
 
 <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>redirecting... | Charavater</title>
 
 <script>
 
-var storage = sessionStorage,
-    json = '${json?json_string}';
-
-if (json.length <= 0)
+try
 {
-    throw new Error('no contours.');
+    var storage = sessionStorage,
+        contoursListJson = '${json?json_string}',
+        contoursList = JSON.parse(contoursListJson);
+    
+    if (contoursList.length <= 0)
+    {
+        alert('no contour.');
+        location.href = '/';
+    }
+    
+    storage.setItem('ContoursList', contoursListJson);
+}
+catch (e)
+{
+    alert(e);
 }
 
-storage.setItem('ContoursList', json);
-
-location.href = '/tweets/authUrl';
+location.href = '/service/tweets/authUrl';
 
 </script>
 

@@ -4,47 +4,83 @@
 <head>
 
 <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Result | Charavater</title>
+
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="/css/styles.css" rel="stylesheet">
+
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 </head>
 <body>
 
-<div id="canvas">
-</div>
+<div class="container">
 
-<a href="/assets">back to start.</a>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-7">
+            <div id="canvas">
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-7">
+            <a href="/">back to start.</a>
+        </div>
+    </div>
+
+</div>
 
 <script>
 
-var storage = sessionStorage,
-    tweetWordsJson = '${json?json_string}',
-    tweetWords = JSON.parse(tweetWordsJson),
-    serializedWords = '',
-    contoursListJson = storage.getItem('ContoursList'),
-    contoursList = JSON.parse(contoursListJson),
-    contoursListLength = 0,
-    svg = '',
-    path = '',
-    textPath = '';
-
-if (contoursList === null || contoursList.length <= 0)
+try
 {
-    alert('no contours.');
-    throw new Error('no contours.');
+    var storage = sessionStorage,
+        tweetWordsJson = '${json?json_string}',
+        tweetWords = JSON.parse(tweetWordsJson),
+        serializedWords = '',
+        contoursListJson = storage.getItem('ContoursList'),
+        contoursList = JSON.parse(contoursListJson),
+        contoursListLength = 0,
+        svg = '',
+        path = '',
+        textPath = '';
+    
+    if (contoursList === null || contoursList.length <= 0)
+    {
+        alert('no contour.');
+        location.href = '/';
+    }
+    
+    contoursListLength = contoursList.length;
+    storage.clear();
+    
+    if (tweetWords === null || contoursList.length <= 0)
+    {
+        alert('no tweet.');
+        location.href = '/';
+    }
+    
+    serializedWords = getSerializedWords(tweetWords);
+    path = contoursListToPathElements(contoursList);
+    textPath = tweetWordsToTextPathElements(contoursList, serializedWords);
+    
+    svg = '<svg id="charavatar" width="480" height="480"><token="hogehogehoge" /><defs>' +
+                path +
+                '</defs><g font-size="12px"><text>' +
+                textPath +
+                '</text></g></svg>';
+    document.getElementById('canvas').innerHTML = svg;
 }
-contoursListLength = contoursList.length;
-storage.clear();
-
-serializedWords = getSerializedWords(tweetWords);
-path = contoursListToPathElements(contoursList);
-textPath = tweetWordsToTextPathElements(contoursList, serializedWords);
-svg = '<svg id="charavatar" width="480" height="480"><defs>' +
-            path +
-            '</defs><g font-size="12px"><text>' +
-            textPath +
-            '</text></g></svg>';
-document.getElementById('canvas').innerHTML = svg;
+catch (e)
+{
+    alert(e);
+}
 
 function getSerializedWords(tweetWords)
 {
@@ -118,7 +154,8 @@ function tweetWordsToTextPathElements(contoursList, serializedWords)
         contoursListIndex = 0,
         contours = [],
         contoursLength = 0,
-        contoursIndex = 0;
+        contoursIndex = 0,
+        characterLength = 0;
 
     for (contoursListIndex = 0; contoursListIndex < contoursListLength; contoursListIndex++)
     {
@@ -127,12 +164,16 @@ function tweetWordsToTextPathElements(contoursList, serializedWords)
         
         for (contoursIndex = 0; contoursIndex < contoursLength; contoursIndex++)
         {
+            characterLength = Math.floor(contours[contoursIndex].arcLength);
+
             textPath += '<textPath xlink:href="#textpath-' +
                             contoursListIndex +
                             '-' +
                             contoursIndex +
                             '">' +
-                            serializedWords +
+                            serializedWords.substr(
+                                    Math.floor(Math.random() * (serializedWords.length - characterLength)),
+                                    characterLength) +
                             '</textPath>';
         }
     }

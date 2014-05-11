@@ -4,6 +4,7 @@
 <head>
 
 <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>redirecting... | Charavater</title>
 
 <script>
@@ -12,7 +13,8 @@ var authUrl = '${authUrl}';
 
 if (authUrl.length <= 0)
 {
-    throw new Error('no auth URL.');
+    alert('no auth URL.');
+    location.href = '/';
 }
 
 location.href = '${authUrl}';
