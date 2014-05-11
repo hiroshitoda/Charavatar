@@ -5,7 +5,9 @@
 
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>redirecting... | Charavater</title>
+<title>redirecting to Twitter... | Charavater</title>
+
+<script src="/js/model/LanguageModel.js"></script>
 
 <script>
 

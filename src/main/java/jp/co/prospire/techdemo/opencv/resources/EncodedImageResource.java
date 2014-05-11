@@ -125,7 +125,7 @@ public class EncodedImageResource
         if (svgString.length() <= 0)
         {
             log(LogLevel.ERROR, "no svg.");
-            return new SVGImageView(emptyImage, Charsets.UTF_8);
+            return new SVGImageView(emptyImage, "", Charsets.UTF_8);
         }
         
         log(LogLevel.DEBUG, "svg:%s", svgString);
@@ -146,7 +146,7 @@ public class EncodedImageResource
         catch (Exception e)
         {
             log(LogLevel.ERROR, "temporary SVG write error:%s", e.getMessage());
-            return new SVGImageView(emptyImage, Charsets.UTF_8);
+            return new SVGImageView(emptyImage, "", Charsets.UTF_8);
         }
         converter.setSources(new String[]{ sourceFileUrlString });
 
@@ -164,7 +164,7 @@ public class EncodedImageResource
         catch (Exception e)
         {
             log(LogLevel.ERROR, "SVG -> PNG convert error:%s", e.getMessage());
-            return new SVGImageView(emptyImage, Charsets.UTF_8);
+            return new SVGImageView(emptyImage, "", Charsets.UTF_8);
         }
         
         byte[] pngImage = null;
@@ -175,7 +175,7 @@ public class EncodedImageResource
         catch (Exception e)
         {
             log(LogLevel.ERROR, "PNG read error:%s", e.getMessage());
-            return new SVGImageView(emptyImage, Charsets.UTF_8);
+            return new SVGImageView(emptyImage, "", Charsets.UTF_8);
         }
         String encodedImage = new String(Base64.encode(pngImage), Charsets.UTF_8);
         log(LogLevel.DEBUG, "BASE64 encoded:%s", encodedImage);
@@ -218,7 +218,7 @@ public class EncodedImageResource
         if (shortUrl.length() <= 0)
         {
             log(LogLevel.ERROR, "no short URL.");
-            return new SVGImageView(emptyImage, Charsets.UTF_8);
+            return new SVGImageView(emptyImage, "", Charsets.UTF_8);
         }
 
         log(LogLevel.DEBUG, "short URL access:%s", shortUrl);
@@ -226,6 +226,6 @@ public class EncodedImageResource
         long id = this.encodedImageDAO.getIdByShortUrl(shortUrl);
         String encodedImage = this.encodedImageDAO.getEncodedImageById(id);
         
-        return new SVGImageView(encodedImage, Charsets.UTF_8);
+        return new SVGImageView(encodedImage, shortUrl, Charsets.UTF_8);
     }
 }

@@ -2,15 +2,54 @@
 logging:
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
+  loggers:
+    "jp.co.prospire": INFO
 
-template: Hello, %s!
+# server setting section.
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /menu
+  connector:
+    type: http
+    port: 8080
+
+# database setting section.
+database:
+  # the name of your JDBC driver
+  driverClass: org.postgresql.Driver
+  # the username
+  user: charavatar
+  # the password
+  password: charavatar
+  # the JDBC URL
+  url: jdbc:postgresql://localhost/charavatar
+  # any properties specific to your JDBC driver:
+  properties:
+    charSet: UTF-8
+  # the maximum amount of time to wait on an empty pool before throwing an exception
+  maxWaitForConnection: 1s
+  # the SQL query to run when validating a connection's liveness
+  validationQuery: "/* Charavater Health Check */ SELECT 1"
+  # the minimum number of connections to keep open
+  minSize: 8
+  # the maximum number of connections to keep open
+  maxSize: 32
+  # whether or not idle connections should be validated
+  checkConnectionWhileIdle: false
+
+# upload file section.
+temporaryDirectory: /tmp
 
 # Contour section.
 canvasWidth: 480
 canvasHeight: 480
-smoothness: 6
+smoothness: 4
 
 # Twitter OAuth section.
 consumerKey: 
 consumerSecret: 
-callbackUrl: http://charavatar.me/tweets/get
+callbackUrl: http://charavatar.me/service/tweets/words
+
+# health check template.
+template: Hello, %s!

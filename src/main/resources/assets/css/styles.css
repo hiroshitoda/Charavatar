@@ -1,0 +1,76 @@
+.header {
+    background-color: orange;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    font-size: 200%;
+    text-align: center;
+}
+
+.header img {
+    max-width: 320px;
+    width: 100%;
+}
+
+.introduction {
+    background-color: orange;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    font-size: 150%;
+    text-align: center;
+}
+
+.introduction img {
+    max-width: 240px;
+    width: 100%;
+}
+
+.teaser-image {
+    padding: 0px;
+    overflow: hidden;
+}
+
+.teaser-image img {
+    width: 100%;
+    min-height: 160px;
+}
+
+.first-step {
+    background-color: #baf9ff;
+    font-size: 150%;
+    text-align: center;
+}
+
+.first-step input {
+    background-color: #ffffff;
+    border: 2px dashed #1F7780;
+    border-radius: 5px;
+    font-size: 60%;
+    margin: 10px auto;
+    padding: 10px;
+}
+
+.second-step {
+    text-align: center;
+}
+
+.canvas {
+    text-align: center;
+    width: 100%;
+}
+
+.canvas img {
+    max-width: 480px;
+    text-align: center;
+    width: 100%;
+}
+
+.share {
+    margin: 10px;
+    text-align: center;
+}
+
+.share-url-field {
+    background-color: #e0e0e0;
+    margin: 5px auto;
+    width: 50%;
+}

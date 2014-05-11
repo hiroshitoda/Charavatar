@@ -14,39 +14,51 @@
 
 <script src="/js/jquery-2.1.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/knockout-3.1.0.js"></script>
 
 </head>
 <body>
 <div class="container">
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            Charavatar
+        <div class="col-xs-12 col-sm-12 col-md-12 header">
+            <img src="/image/header.png" alt="CHARAVATAR" />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            explain yourself by your tweets.
+        <div class="col-xs-3 col-sm-3 col-md-3 teaser-image">
+            <img class="img-circle" data-bind="attr: teaserImage1Attributes" />
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 introduction">
+            <img data-bind="attr: teaserTextAttributes" />
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 teaser-image">
+            <img class="img-circle" data-bind="attr: teaserImage2Attributes" />
         </div>
     </div>
 
     <form role="form" method="POST" action="/service/contoursList" enctype="multipart/form-data">
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 form-group">
-            <input id="file" type="file" accept="image/*" capture="camera" name="file" />
+        <div class="col-xs-12 col-sm-12 col-md-12 form-group first-step" data-bind="style: firstStepStyle">
+            <label for="file" data-bind="text: firstStepText">1. take your photo.</label>
+            <input id="file" type="file" accept="image/*" capture="camera" name="file" data-bind="value: uploadFilePath" />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 form-group">
-            <input class="btn btn-default btn-lg" id="submit" type="submit" />
+        <div class="col-xs-12 col-sm-12 col-md-12 form-group second-step">
+            <input class="btn btn-info btn-lg" id="submit" type="submit" value="2. push to CHARAVATAR" data-bind="visible: isSubmitEnable, value: secondStepText" />
         </div>
     </div>
 
     </form>
 
 </div>
+
+<script src="/js/model/LanguageModel.js"></script>
+<script src="/js/view_model/IndexViewModel.js"></script>
+
 </body>
 </html>

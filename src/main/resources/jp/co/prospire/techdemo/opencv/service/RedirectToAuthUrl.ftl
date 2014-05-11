@@ -7,6 +7,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>redirecting... | Charavater</title>
 
+<script src="/js/model/LanguageModel.js"></script>
+
 <script>
 
 try
