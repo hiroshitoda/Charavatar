@@ -1,11 +1,18 @@
 package jp.co.prospire.techdemo.opencv;
 
+import org.skife.jdbi.v2.DBI;
+
 import jp.co.prospire.techdemo.opencv.core.HealthCheck.TemplateHealthCheck;
+import jp.co.prospire.techdemo.opencv.dao.EncodedImageDAO;
 import jp.co.prospire.techdemo.opencv.resources.ContoursListResource;
+import jp.co.prospire.techdemo.opencv.resources.EncodedImageResource;
 import jp.co.prospire.techdemo.opencv.resources.TweetResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -28,6 +35,15 @@ public class CharavatarApplication extends Application<CharavatarConfiguration>
     {
         bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
         bootstrap.addBundle(new ViewBundle());
+        bootstrap.addBundle(new MigrationsBundle<CharavatarConfiguration>()
+                {
+                    @Override
+                    public DataSourceFactory getDataSourceFactory(CharavatarConfiguration configuration)
+                    {
+                        return configuration.getDataSourceFactory();
+                    }
+                }
+            );
     }
 
     @Override
@@ -36,6 +52,26 @@ public class CharavatarApplication extends Application<CharavatarConfiguration>
     {
         environment.jersey().setUrlPattern("/service/*");
 
+        try
+        {
+            final DBIFactory factory = new DBIFactory();
+            final DBI jdbi = factory.build(
+                    environment,
+                    configuration.getDataSourceFactory(),
+                    "postgresql"
+                );
+            final EncodedImageDAO encodedImageDAO = jdbi.onDemand(EncodedImageDAO.class);
+            final EncodedImageResource encodedImageResource = new EncodedImageResource(
+                    encodedImageDAO,
+                    configuration.getTemporaryDirectory()
+                );
+            environment.jersey().register(encodedImageResource);
+        }
+        catch (Exception e)
+        {
+            // TODO
+        }
+        
         final ContoursListResource contoursListResource = new ContoursListResource(
                 Integer.parseInt(configuration.getCanvasWidth()),
                 Integer.parseInt(configuration.getCanvasHeight()),
