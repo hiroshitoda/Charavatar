@@ -103,7 +103,7 @@ public class ContoursListResource
         }
         catch (IOException e)
         {
-            logger.warn("can't make directory: " + e.getMessage());
+            logger.warn("can't make directory. maybe dupulicated: " + e.getMessage());
         }
 
         this.haarcascadeFileAbsolutePath = haarcascadeFilePath.toAbsolutePath().toString();

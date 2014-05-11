@@ -143,7 +143,7 @@ public class TweetResource
             log(LogLevel.ERROR, "can't get auth URL: %s",
                     e.getMessage()
                 );
-            return new RedirectToTwitterView(null, Charsets.UTF_8);
+            return new RedirectToTwitterView("", Charsets.UTF_8);
         }
 
         log(LogLevel.DEBUG, "auth URL: %s", authUrl);
