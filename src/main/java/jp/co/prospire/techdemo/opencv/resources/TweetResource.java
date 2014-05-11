@@ -49,7 +49,7 @@ public class TweetResource
     private final String accessTokenUrl = "https://api.twitter.com/oauth/access_token";
     private final String callbackUrl;
     private final String apiUrl = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-
+    
     private final HashMap<String, Integer> emptyList = new HashMap<String, Integer>();
     
     public TweetResource(String consumerKey, String consumerSecret,
@@ -152,7 +152,7 @@ public class TweetResource
     
     @GET
     @Timed
-    @Path("/get")
+    @Path("/words")
     public SVGCanvasView getTweets(
             @QueryParam("oauth_token") String oauthToken,
             @QueryParam("oauth_verifier") String oauthVerifier
@@ -174,7 +174,7 @@ public class TweetResource
             log(LogLevel.ERROR, "can't get access tokens: %s",
                     e.getMessage()
                 );
-            return new SVGCanvasView(emptyList, Charsets.UTF_8);
+            return new SVGCanvasView(this.emptyList, Charsets.UTF_8);
         }
 
         String accessToken = this.consumer.getToken();
@@ -195,7 +195,7 @@ public class TweetResource
         {
             URL url = new URL(
                     this.apiUrl
-                    + "?count=200"
+                    + "?count=100"
                 );
             HttpURLConnection request = (HttpURLConnection) url.openConnection();
             request.setRequestMethod("GET");
@@ -234,7 +234,7 @@ public class TweetResource
                     this.apiUrl,
                     e.getMessage()
                 );
-            return new SVGCanvasView(emptyList, Charsets.UTF_8);
+            return new SVGCanvasView(this.emptyList, Charsets.UTF_8);
         }
         
         HashMap<String, Integer> tweetWords = new HashMap<String, Integer>();
@@ -291,7 +291,7 @@ public class TweetResource
         catch (Exception e)
         {
             log(LogLevel.ERROR, "error in JSON: %s", e.getMessage());
-            return new SVGCanvasView(emptyList, Charsets.UTF_8);
+            return new SVGCanvasView(this.emptyList, Charsets.UTF_8);
         }
 
         return new SVGCanvasView(tweetWords, Charsets.UTF_8);
