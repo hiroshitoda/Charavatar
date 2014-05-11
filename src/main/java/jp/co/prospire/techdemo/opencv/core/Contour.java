@@ -10,9 +10,12 @@ public class Contour
     private final int contoursIndex;
     private final ArrayList<HashMap<String, Integer>> points;
     
+    private double arcLength;
+
     public Contour(int contoursIndex)
     {
         this.contoursIndex = contoursIndex;
+        this.arcLength = 0.0;
         this.points = new ArrayList<HashMap<String, Integer>>();
     }
 
@@ -26,6 +29,18 @@ public class Contour
     public ArrayList<HashMap<String, Integer>> getPoints()
     {
         return points;
+    }
+
+    @JsonProperty
+    public double getArcLength()
+    {
+        return this.arcLength;
+    }
+
+    @JsonProperty
+    public void setArcLength(double arcLength)
+    {
+        this.arcLength = arcLength;
     }
 
     @JsonProperty
