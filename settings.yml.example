@@ -6,10 +6,10 @@ logging:
     "jp.co.prospire": INFO
   appenders:
     - type: file
-      currentLogFilename: /var/log/charavatar.log
+      currentLogFilename: /var/log/Charavatar/charavatar.log
       threshold: ALL
       archive: true
-      archivedLogFilenamePattern: /var/log/charavatar-%d.log
+      archivedLogFilenamePattern: /var/log/Charavatar/charavatar-%d.log
       archivedFileCount: 50
       timeZone: UTC
 
