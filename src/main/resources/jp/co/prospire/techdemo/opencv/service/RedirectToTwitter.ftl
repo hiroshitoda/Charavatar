@@ -11,11 +11,12 @@
 
 <script>
 
-var authUrl = '${authUrl}';
+var authUrl = '${authUrl}',
+    words = LanguageModel.defaultWords;
 
 if (authUrl.length <= 0)
 {
-    alert('no auth URL.');
+    alert(words['no auth URL']);
     location.href = '/';
 }
 

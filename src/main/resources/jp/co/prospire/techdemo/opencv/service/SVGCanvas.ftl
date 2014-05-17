@@ -20,15 +20,47 @@
 </head>
 <body>
 
-<form id="svg_form" action="/service/share" method="POST">
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 charavatar-progress" data-bind="text: progressText"></div>
+</div>
 
-<input id="svg" name="svg" type="hidden" data-bind="value: svgValue" /> 
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="canvas" data-bind="html: svgValue"></div>
+    </div>
+</div>
 
-</form>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group share-avatar">
+
+        <form id="svg_form" action="/service/share" method="POST">
+
+        <input id="svg" name="svg" type="hidden" data-bind="value: svgValue" />
+
+        <input class="btn btn-info btn-lg" id="submit" type="submit" value="share this avatar" data-bind="visible: isSubmitEnable, value: shareAvatarText" />
+
+        </form>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group share-avatar">
+
+        <form action="/" method="GET">
+
+        <input class="btn btn-default btn-lg" id="submit" type="submit" value="return to the first" data-bind="value: returnText" />
+
+        </form>
+
+    </div>
+</div>
 
 <script>
 var tweetJsonString = '${json?json_string}';
 </script>
+
+<script src="/js/model/LanguageModel.js"></script>
 <script src="/js/view_model/SVGCanvasViewModel.js"></script>
 
 </body>

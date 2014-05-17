@@ -2,6 +2,8 @@ var SVGCanvasViewModel;
 
 (function(){
 
+    var words = LanguageModel.defaultWords;
+    
     SVGCanvasViewModel = function SVGCanvasViewModel(tweetWordsJson)
     {
         var storage = sessionStorage,
@@ -13,10 +15,12 @@ var SVGCanvasViewModel;
             svg = '',
             path = '',
             textPath = '';
+        
+        self.isSubmitEnable = ko.observable(false);
     
         if (contoursList === null || contoursList.length <= 0)
         {
-            alert('no contour.');
+            alert(words['no contours']);
             location.href = '/';
         }
 
@@ -133,22 +137,20 @@ var SVGCanvasViewModel;
         svg = '<svg xmlns="http://www.w3.org/2000/svg"' +
                     ' xmlns:xlink="http://www.w3.org/1999/xlink"' +
                     ' version="1.1"' +
-                    ' id="charavatar" width="480" height="480"><defs>' +
+                    ' id="charavatar" width="100%" height="100%" viewBox="0 0 480 480"><defs>' +
                     path +
                     '</defs><g font-size="12px">' +
                     textPath +
                     '</g></svg>';
 
         self.svgValue = ko.observable(svg);
-        
+
+        self.progressText = words['completed'];
+        self.isSubmitEnable(true);
+        self.shareAvatarText = words['share this avatar'];
+        self.returnText = words['return'];
     };
     
     ko.applyBindings(new SVGCanvasViewModel(this.tweetJsonString));
     
-    setTimeout(submitSvg, 100);
-    
-    function submitSvg()
-    {
-        document.getElementById('svg_form').submit();
-    }
 }());

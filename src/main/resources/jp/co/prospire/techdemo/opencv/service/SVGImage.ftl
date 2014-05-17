@@ -39,7 +39,8 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 share">
             <span data-bind="text: shareUrlDescription"></span>
-            <input class="share-url-field form-control" type="text" data-bind="value: shareUrl" />
+            <br />
+            <input class="share-url-field col-xs-10 col-sm-8 col-md-6" type="text" data-bind="value: shareUrl" />
         </div>
     </div>
 
@@ -47,24 +48,24 @@
         <div class="col-xs-12 col-sm-12 col-md-12 share">
         
             <!-- twitter -->
-            <div class="col-xs-6 col-sm-4 col-md-2">
+            <div class="col-xs-6 col-sm-3 col-md-3 social-button">
                 <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-bind="attr: twitterButtonAttributes">Tweet</a>
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
             </div>
 
             <!-- facebook -->
-            <div class="col-xs-12 col-sm-8 col-md-6">
-                <iframe data-bind="attr: facebookIframeAttributes" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:21px;" allowTransparency="true"></iframe>
+            <div class="col-xs-6 col-sm-3 col-md-3 social-button">
+                <iframe data-bind="attr: facebookIframeAttributes" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:21px; width:150px;" allowTransparency="true"></iframe>
             </div>
             
             <!-- hatena -->
-            <div class="col-xs-6 col-sm-4 col-md-2">
+            <div class="col-xs-6 col-sm-3 col-md-3 social-button">
                 <a data-bind="attr: hatenaButtonAttributes" class="hatena-bookmark-button" data-hatena-bookmark-layout="standard-balloon" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
                 <script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
             </div>
             
             <!-- google+ -->
-            <div class="col-xs-6 col-sm-4 col-md-2">
+            <div class="col-xs-6 col-sm-3 col-md-3 social-button">
                 <div class="g-plusone" data-bind="attr: googleButtonAttributes"></div>
                 <script type="text/javascript">
                     window.___gcfg = {lang: 'ja'};
