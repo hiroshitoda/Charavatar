@@ -2,6 +2,7 @@ package jp.co.prospire.techdemo.opencv.resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -15,7 +16,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import jp.co.prospire.techdemo.opencv.dao.EncodedImageDAO;
 import jp.co.prospire.techdemo.opencv.service.SVGImageView;
@@ -44,13 +47,17 @@ public class EncodedImageResource
     private final String tempDirectoryPathString;
     private java.nio.file.Path tempDirectoryPath;
     
+    private final String callbackUrl;
+    
     private final String emptyImage = "";
     
-    public EncodedImageResource(EncodedImageDAO encodedImageDAO, String tempDirectoryPathString)
+    public EncodedImageResource(EncodedImageDAO encodedImageDAO, String tempDirectoryPathString,
+            String callbackUrl)
     {
         this.counter = new AtomicLong();
         this.encodedImageDAO = encodedImageDAO;
         this.tempDirectoryPathString = tempDirectoryPathString;
+        this.callbackUrl = callbackUrl;
 
         this.defaultFileSystem = FileSystems.getDefault();
         
@@ -203,7 +210,19 @@ public class EncodedImageResource
         
         log(LogLevel.INFO, "new data. ID:%d, URL:%s", newId, newShortUrl);
         
-        return this.getImage(newShortUrl);
+        URI uri = null;
+        try
+        {
+            uri = new URI(this.callbackUrl + "service/share/" + newShortUrl);
+        }
+        catch (Exception e)
+        {
+            log(LogLevel.ERROR, "can't make callback URL: %s",
+                    e.getMessage()
+                );
+        }
+        Response response = Response.seeOther(uri).build();
+        throw new WebApplicationException(response);
     }
     
     @GET
