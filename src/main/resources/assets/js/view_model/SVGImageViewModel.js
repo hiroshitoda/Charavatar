@@ -22,7 +22,7 @@ var SVGImageViewModel;
         {
             'src': '//www.facebook.com/plugins/like.php?href=' +
                         encodeURIComponent(self.shareUrl) +
-                        '&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=21'
+                        '&width=140&layout=button_count&action=like&show_faces=false&share=true&height=21'
         };
         
         self.hatenaButtonAttributes =
