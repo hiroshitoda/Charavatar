@@ -122,7 +122,7 @@ var SVGCanvasViewModel;
                                             Math.floor(Math.random() * (serializedWords.length - characterLength)),
                                             characterLength
                                         )
-                                        .replace('&', '&amp;') +
+                                        .replace(/\&([^a]*)/g, '&amp;$1') +
                                     '</textPath></text>';
                 }
             }
