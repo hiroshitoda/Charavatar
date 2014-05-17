@@ -48,29 +48,23 @@ public class CharavatarApplication extends Application<CharavatarConfiguration>
 
     @Override
     public void run(CharavatarConfiguration configuration,
-                    Environment environment)
+                    Environment environment) throws ClassNotFoundException
     {
         environment.jersey().setUrlPattern("/service/*");
 
-        try
-        {
-            final DBIFactory factory = new DBIFactory();
-            final DBI jdbi = factory.build(
-                    environment,
-                    configuration.getDataSourceFactory(),
-                    "postgresql"
-                );
-            final EncodedImageDAO encodedImageDAO = jdbi.onDemand(EncodedImageDAO.class);
-            final EncodedImageResource encodedImageResource = new EncodedImageResource(
-                    encodedImageDAO,
-                    configuration.getTemporaryDirectory()
-                );
-            environment.jersey().register(encodedImageResource);
-        }
-        catch (Exception e)
-        {
-            // TODO
-        }
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(
+                environment,
+                configuration.getDataSourceFactory(),
+                "postgresql"
+            );
+        final EncodedImageDAO encodedImageDAO = jdbi.onDemand(EncodedImageDAO.class);
+        final EncodedImageResource encodedImageResource = new EncodedImageResource(
+                encodedImageDAO,
+                configuration.getTemporaryDirectory(),
+                configuration.getCallbackUrl()
+            );
+        environment.jersey().register(encodedImageResource);
         
         final ContoursListResource contoursListResource = new ContoursListResource(
                 Integer.parseInt(configuration.getCanvasWidth()),
