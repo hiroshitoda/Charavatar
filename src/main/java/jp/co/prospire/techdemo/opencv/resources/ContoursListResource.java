@@ -296,38 +296,66 @@ public class ContoursListResource
         
         // get the biggest face area.
         int totalFaceCount = faces.total();
+        int rectX;
+        int rectY;
+        int rectWidth;
+        int rectHeight;
         if (totalFaceCount <= 0)
         {
-            throw new Exception("Found no face");
-        }
-        log(LogLevel.INFO, "Found %d face(s)",
-                        totalFaceCount
-                    );
-        int selectedFaceIndex = 0;
-        int maxFaceRectWidth = 0;
-        int maxFaceRectHeight = 0;
-        for (int faceIndex = 0; faceIndex < totalFaceCount; faceIndex++)
-        {
-            CvRect faceRect = new CvRect(cvGetSeqElem(faces, faceIndex));
-            int faceRectWidth = faceRect.width();
-            int faceRectHeight = faceRect.width();
-            if (faceRectWidth * faceRectHeight > maxFaceRectWidth * maxFaceRectHeight)
+            log(LogLevel.INFO, "Found no face.",
+                    totalFaceCount
+                );
+            if (resizedWidth > resizedHeight)
             {
-                selectedFaceIndex = faceIndex;
-                maxFaceRectWidth = faceRectWidth;
-                maxFaceRectHeight = faceRectHeight;
+                rectY = 0;
+                rectX = (resizedWidth - resizedHeight) / 2;
+                rectWidth = resizedHeight;
+                rectHeight = resizedHeight;
             }
+            else
+            {
+                rectX = 0;
+                rectY = (resizedHeight - resizedWidth) / 2;
+                rectWidth = resizedWidth;
+                rectHeight = resizedWidth;
+            }
+            rectX = (int) (rectX * scaleRateForFaceDetection);
+            rectY = (int) (rectY * scaleRateForFaceDetection);
+            rectWidth = (int) (rectWidth * scaleRateForFaceDetection);
+            rectHeight = (int) (rectHeight * scaleRateForFaceDetection);
         }
-        log(LogLevel.INFO, "selected face:%d",
-                        selectedFaceIndex
-                    );
+        else
+        {
+            log(LogLevel.INFO, "Found %d face(s).",
+                            totalFaceCount
+                        );
+            int selectedFaceIndex = 0;
+            int maxFaceRectWidth = 0;
+            int maxFaceRectHeight = 0;
+            for (int faceIndex = 0; faceIndex < totalFaceCount; faceIndex++)
+            {
+                CvRect faceRect = new CvRect(cvGetSeqElem(faces, faceIndex));
+                int faceRectWidth = faceRect.width();
+                int faceRectHeight = faceRect.width();
+                if (faceRectWidth * faceRectHeight > maxFaceRectWidth * maxFaceRectHeight)
+                {
+                    selectedFaceIndex = faceIndex;
+                    maxFaceRectWidth = faceRectWidth;
+                    maxFaceRectHeight = faceRectHeight;
+                }
+            }
+            log(LogLevel.INFO, "selected face:%d",
+                            selectedFaceIndex
+                        );
+            
+            // set the biggest face area to original image.
+            CvRect primaryFaceRect = new CvRect(cvGetSeqElem(faces, selectedFaceIndex));
+            rectX = (int) (primaryFaceRect.x() * scaleRateForFaceDetection);
+            rectY = (int) (primaryFaceRect.y() * scaleRateForFaceDetection);
+            rectWidth = (int) (primaryFaceRect.width() * scaleRateForFaceDetection);
+            rectHeight = (int) (primaryFaceRect.height() * scaleRateForFaceDetection);
+        }
         
-        // set the biggest face area to original image.
-        CvRect primaryFaceRect = new CvRect(cvGetSeqElem(faces, selectedFaceIndex));
-        int rectX = (int) (primaryFaceRect.x() * scaleRateForFaceDetection);
-        int rectY = (int) (primaryFaceRect.y() * scaleRateForFaceDetection);
-        int rectWidth = (int) (primaryFaceRect.width() * scaleRateForFaceDetection);
-        int rectHeight = (int) (primaryFaceRect.height() * scaleRateForFaceDetection);
         CvRect scaledFaceRect = new CvRect(
                 rectX,
                 rectY,
@@ -379,8 +407,6 @@ public class ContoursListResource
                 contours,
                 Loader.sizeof(CvContour.class),
                 CV_RETR_LIST,
-                //CV_CHAIN_APPROX_NONE
-                //CV_CHAIN_APPROX_SIMPLE
                 CV_CHAIN_APPROX_TC89_L1 
             );
         cvClearMemStorage(contourStorage);
