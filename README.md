@@ -15,11 +15,16 @@ Quick Start
 ============
 
 1. build project by Maven.
+
     $ mvn clean package
+
 2. make settings.yml from settings.yml.example copy.
 3. execute migration.
+
     $ java -jar target/Charavatar*.jar db migrate settings.yml
+
 4. start server.
+
     $ java -jar target/Charavatar*.jar server settings.yml
 
 License
