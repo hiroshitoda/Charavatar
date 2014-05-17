@@ -57,7 +57,7 @@ smoothness: 4
 # Twitter OAuth section.
 consumerKey: 
 consumerSecret: 
-callbackUrl: http://charavatar.me/service/tweets/words
+callbackUrl: http://charavatar.me/
 
 # health check template.
 template: Hello, %s!

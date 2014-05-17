@@ -5,11 +5,14 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.google.common.base.Charsets;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -24,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -135,7 +139,7 @@ public class TweetResource
         {
             authUrl = this.provider.retrieveRequestToken(
                     this.consumer,
-                    this.callbackUrl
+                    this.callbackUrl + "service/tweets/words"
                 );
         }
         catch (Exception e)
@@ -155,9 +159,27 @@ public class TweetResource
     @Path("/words")
     public SVGCanvasView getTweets(
             @QueryParam("oauth_token") String oauthToken,
-            @QueryParam("oauth_verifier") String oauthVerifier
+            @QueryParam("oauth_verifier") String oauthVerifier,
+            @QueryParam("denied") @Nullable String denied
         )
     {
+        if (denied != null && denied.length() > 0)
+        {
+            URI uri = null;
+            try
+            {
+                uri = new URI(this.callbackUrl);
+            }
+            catch (Exception e)
+            {
+                log(LogLevel.ERROR, "can't make callback URL: %s",
+                        e.getMessage()
+                    );
+            }
+            Response response = Response.seeOther(uri).build();
+            throw new WebApplicationException(response);
+        }
+
         log(LogLevel.DEBUG, "OAuth Token:%s, OAuth verifier:%s",
                 oauthToken,
                 oauthVerifier
