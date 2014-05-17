@@ -4,6 +4,14 @@ logging:
   level: INFO
   loggers:
     "jp.co.prospire": INFO
+  appenders:
+    - type: file
+      currentLogFilename: /var/log/charavatar.log
+      threshold: ALL
+      archive: true
+      archivedLogFilenamePattern: /var/log/charavatar-%d.log
+      archivedFileCount: 50
+      timeZone: UTC
 
 # server setting section.
 server:
