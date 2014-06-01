@@ -110,9 +110,15 @@
             <name>JavaCV</name>
             <url>http://maven2.javacv.googlecode.com/git/</url>
         </repository>
+        <!--
         <repository>
             <id>Atilika Open Source repository</id>
             <url>http://www.atilika.org/nexus/content/repositories/atilika</url>
+        </repository>
+        -->
+        <repository>
+            <id>temporary repository on GitHub</id>
+            <url>https://raw.github.com/hiroshitoda-prospire/kuromoji/mvn-repo/</url>
         </repository>
     </repositories>
     <build>
