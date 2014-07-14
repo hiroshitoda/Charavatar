@@ -1,4 +1,4 @@
-Caravatar
+Charavatar
 =========
 
 making avater from your photo with characters composing recent tweets.
